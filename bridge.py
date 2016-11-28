@@ -161,12 +161,10 @@ class MyDaemon(Daemon):
                 "http://[your server address]/[replace with your chip id]?token=your_token&uptime=your_uptime_in_s")
             htmlSource = sock.read()
             sock.close()
-            if htmlSource[0] == "1":
-                sock = urllib.urlopen(
-                    "http://192.168.1.103/?pin=0x00&pinb=0x00&pinc=0xFF")
-            else:
-                sock = urllib.urlopen(
-                    "http://192.168.1.103/?pin=0x00&pinb=0x00&pinc=0x00")
+            hexa = htmlSource[0]+htmlSource[1]
+            if htmlSource[2] == "0":
+            	time.sleep(2)
+            sock = urllib.urlopen("http://192.168.1.189/?pin=0x00&pinb=0x00&pinc=0x"+hexa)
             time.sleep(0.3)
 
 
