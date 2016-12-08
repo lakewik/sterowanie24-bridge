@@ -153,19 +153,36 @@ class Daemon:
 
 class MyDaemon(Daemon):
     def run(self):
+        from xml.dom import minidom
+
+        doc = minidom.parse("config.xml")
+
+        # doc.getElementsByTagName returns NodeList
+        server_address = doc.getElementsByTagName("server_address")[0]
+        server_port = doc.getElementsByTagName("server_port")[0]
+        chip_id = doc.getElementsByTagName("chip_id")[0]
+        token = doc.getElementsByTagName("token")[0]
+        chip_ip = doc.getElementsByTagName("chip_ip")[0]
+        refresh_on_inactive_interval = doc.getElementsByTagName("refresh_interval_on_inactive")[0]
+        refresh_interval = doc.getElementsByTagName("refresh_interval")[0]
         while True:
             import os
             import urllib2, urlparse, gzip
             from StringIO import StringIO
+
+            # initialize configuration #
+
             sock = urllib.urlopen(
-                "http://[your server address]/[replace with your chip id]?token=your_token&uptime=your_uptime_in_s")
+                "http://"+str(server_address.firstChild.data)+":"+str(server_port.firstChild.data)+"/"+str(chip_id.firstChild.data)+"?token="+str(token.firstChild.data)+"&hex=1")
             htmlSource = sock.read()
             sock.close()
             hexa = htmlSource[0]+htmlSource[1]
+
             if htmlSource[2] == "0":
-            	time.sleep(2)
-            sock = urllib.urlopen("http://192.168.1.189/?pin=0x00&pinb=0x00&pinc=0x"+hexa)
-            time.sleep(0.3)
+            	time.sleep(float(refresh_on_inactive_interval.firstChild.data))
+
+            sock = urllib.urlopen("http://"+str(chip_ip.firstChild.data)+"/?pin=0x00&pinb=0x00&pinc=0x"+hexa)
+            time.sleep(float(refresh_interval.firstChild.data))
 
 
 if __name__ == "__main__":
