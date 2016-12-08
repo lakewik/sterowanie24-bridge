@@ -2,7 +2,7 @@
 <server_address>socket.sterowanie24.pl</server_address>
 <server_port>1338</server_port>
 <chip_id>4</chip_id>
-<token>tRBxqYCk</token>
+<token>abcde</token>
 
 <chip_ip>192.168.1.103</chip_ip>
 <refresh_interval>0.3</refresh_interval>
